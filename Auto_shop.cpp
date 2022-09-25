@@ -47,7 +47,7 @@ void Auto::set_prod_year(int prod_yearP) { prod_year = prod_yearP; }
 void Auto::set_engine_volume(int engine_volumeP) { engine_volume = engine_volumeP; }
 void Auto::set_price(double priceP) { price = priceP; }
 void Auto::show_car() {
-    cout << "Car information:\n";
+    
     cout << "Model: " << name << endl;
     cout << "Year of production: " << prod_year << endl;
     cout << "Engine volume: " << engine_volume << endl;
@@ -55,10 +55,77 @@ void Auto::show_car() {
     cout << endl;
 }
 
+Auto Add_Auto()
+{
+    string nameP;
+    Auto temp;
+    int t1;
+    double t2;
 
-void SaveToFile(list<Auto> l_auto)
+
+    cout << "\nname: ";
+    cin >> nameP;
+    temp.set_name(nameP);
+
+    cout << "production yaer: ";
+    cin >> t1;
+    temp.set_prod_year(t1);
+
+    cout << "engine volume: ";
+    cin >> t1;
+    temp.set_engine_volume(t1);
+
+    cout << "price: ";
+    cin >> t2;
+    temp.set_price(t2);
+
+    return temp;
+}
+void Edit_Auto(list<Auto> &a, int i)
+{   
+    if (i<1 || i > a.size())
+        throw "\nWrong index!!!\n";
+
+    string nameP;
+    int t1;
+    double t2;
+
+    auto it = a.begin();
+    advance(it, i - 1);
+
+    cout << "\nname: ";
+    cin >> nameP;
+    (*it).set_name(nameP);
+
+    cout << "production yaer: ";
+    cin >> t1;
+    (*it).set_prod_year(t1);
+
+    cout << "engine volume: ";
+    cin >> t1;
+    (*it).set_engine_volume(t1);
+
+    cout << "price: ";
+    cin >> t2;
+    (*it).set_price(t2);
+
+}
+void Delete_Auto(list<Auto>&a, int i)
+{
+    if (i<1 || i > a.size())
+        throw "\nWrong index!!!\n";
+
+    auto it = a.begin();
+    advance(it, i - 1);
+
+    a.erase(it);
+}
+
+
+void SaveToFile(list<Auto>& l_auto)
 {
     remove("Autos.txt");
+
     int size; char* temp = nullptr;
     double size_d;
 
@@ -134,8 +201,12 @@ list<Auto> LoadFromFile() {
 
 void show_all(const list<Auto> v) 
 {
+    int i = 1;
     for (auto var : v)
+    {
+        cout << "Car " << i++ << " information:\n";
         var.show_car();
+    }
 }
 
 int Menu()
@@ -144,8 +215,8 @@ int Menu()
     cout << "\nPlease make your choice:\n";
     cout << " 1 - to see all autos\n";
     cout << " 2 - to add new auto\n";
-    cout << " 3 - to edit auto\n";
-    cout << " 4 - to delete auto\n";
+    cout << " 3 - to delete auto\n";
+    cout << " 4 - to edit auto\n";
     cout << " 5 - to sort data\n";
     cout << " 6 - to find auto\n";
     cout << " 0 - to exit programm\n";
@@ -185,6 +256,7 @@ int Find_Menu()
 
 int main()
 {
+    {
     //Auto a1{ "Land Cruiser 300", 2017, 4500, 53000 };
     //Auto a2{ "VW Golf", 2013, 1600, 12500 };
     //Auto a3{ "VW Touareg", 2021, 3000, 74000 };
@@ -200,7 +272,7 @@ int main()
     //auto_l.push_back(a5);
 
     //SaveToFile(auto_l);
-    
+}
     list<Auto> autos = LoadFromFile();
 
     try {
@@ -213,21 +285,35 @@ int main()
                 break;
             case 2:
             {
+                cout << "\nAdditg new car. Please enter";
+                autos.push_back(Add_Auto());
+                cout << "new car added!\n";
                 break;
             }
             case 3:
             {
-
+                int temp;
+                cout << "Please enter car number you want to delete: ";
+                cin >> temp;
+                Delete_Auto(autos, temp);
+                cout << "Car " << temp << " deleted.\n";
                 break;
             }
             case 4:
             {
+                int temp;
+                cout << "\nPlease enter number of car to edit: ";
+                cin >> temp;
 
+                Edit_Auto(autos, temp);
+                cout << "car edited!\n";
                 break;
             }
             case 0:
-                cout << "Good Buy!\n";
-                return 0;
+            {cout << "Good Buy!\n";
+            SaveToFile(autos);
+            return 0;
+            }
             default:
                 cout << "Wrong choice!\n";
             }
@@ -236,6 +322,8 @@ int main()
     catch (char* su) {
         std::cout << "\n\nException!!!\n\n";
     }
+
+    
 
     return 0;
 }
