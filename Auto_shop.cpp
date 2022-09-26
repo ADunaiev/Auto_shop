@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <iostream>
 #include <list>
-#include<string.h>
-#include<fstream>
+#include <string.h>
+#include <fstream>
 using namespace std;
 //Задание 1.
 //Создайте приложение для работы автосалона.Необходимо
@@ -53,6 +53,23 @@ void Auto::show_car() {
     cout << "Engine volume: " << engine_volume << endl;
     cout << "Price, USD: " << price << endl;
     cout << endl;
+}
+
+bool SortByName(Auto &left, Auto &right)
+{
+    return (left.get_name() < right.get_name());
+}
+bool SortByProdYear(Auto& left, Auto& right)
+{
+    return (left.get_prod_year() < right.get_prod_year());
+}
+bool SortByEngineVolume(Auto& left, Auto& right)
+{
+    return (left.get_engine_volume() < right.get_engine_volume());
+}
+bool SortByPrice(Auto& left, Auto& right)
+{
+    return (left.get_price() < right.get_price());
 }
 
 Auto Add_Auto()
@@ -233,7 +250,7 @@ int Sort_Menu()
     cout << " 2 - to sort by production year\n";
     cout << " 3 - to sort by engine volume\n";
     cout << " 4 - to sort by price\n";
-    cout << " 0 - to exit programm\n";
+    cout << " 0 - return to main menu\n";
     cout << "\nYour choice is - ";
     cin >> temp;
 
@@ -307,6 +324,48 @@ int main()
 
                 Edit_Auto(autos, temp);
                 cout << "car edited!\n";
+                break;
+            }
+            case 5:
+            {
+                int t2 =1;
+
+                do {
+                    switch (Sort_Menu())
+                    {
+                    case 1:
+                    {  
+                        autos.sort(SortByName);
+                        show_all(autos);
+                        break;
+                    }
+                    case 2:
+                    {
+                        autos.sort(SortByProdYear);
+                        show_all(autos);
+                        break;
+                    }
+                    case 3:
+                    {
+                        autos.sort(SortByEngineVolume);
+                        show_all(autos);
+                        break;
+                    }
+                    case 4:
+                    {
+                        autos.sort(SortByPrice);
+                        show_all(autos);
+                        break;
+                    }
+                    case 0:
+                        t2 = 0;
+                        break;
+                    default:
+                        cout << "Wrong choice!\n";
+                    }
+
+                } while (t2);
+
                 break;
             }
             case 0:
