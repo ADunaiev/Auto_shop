@@ -32,7 +32,8 @@ public:
     void set_engine_volume(int engine_volumeP);
     void set_price(double priceP);
     void show_car();
-   
+    bool operator==(const Auto& object);
+    friend ostream& operator<<(ostream& out, const Auto& object);
 };
 Auto::Auto(string nameP, int prod_yearP, int engine_volumeP, double priceP) :
     name{ nameP }, prod_year{ prod_yearP }, engine_volume{ engine_volumeP },
@@ -53,6 +54,33 @@ void Auto::show_car() {
     cout << "Engine volume: " << engine_volume << endl;
     cout << "Price, USD: " << price << endl;
     cout << endl;
+}
+ostream& operator<<(ostream& out, const Auto& object) {
+
+    cout << "Model: " << object.name << endl;
+    cout << "Year of production: " << object.prod_year << endl;
+    cout << "Engine volume: " << object.engine_volume << endl;
+    cout << "Price, USD: " << object.price << endl;
+    cout << endl;
+    return out;
+}
+bool Auto::operator==(const Auto& object)
+{
+    bool i = 1;
+
+    if (name != object.name)
+        i = 0;
+
+    if (prod_year != object.prod_year)
+        i = 0;
+
+    if (engine_volume != object.engine_volume)
+        i = 0;
+
+    if (price != object.price)
+        i = 0;
+
+    return i;
 }
 
 bool SortByName(Auto &left, Auto &right)
@@ -264,7 +292,7 @@ int Find_Menu()
     cout << " 2 - to find by production year\n";
     cout << " 3 - to find by engine volume\n";
     cout << " 4 - to find by price\n";
-    cout << " 0 - to exit programm\n";
+    cout << " 0 - to return to main menu\n";
     cout << "\nYour choice is - ";
     cin >> temp;
 
@@ -273,23 +301,6 @@ int Find_Menu()
 
 int main()
 {
-    {
-    //Auto a1{ "Land Cruiser 300", 2017, 4500, 53000 };
-    //Auto a2{ "VW Golf", 2013, 1600, 12500 };
-    //Auto a3{ "VW Touareg", 2021, 3000, 74000 };
-    //Auto a4{ "Nissan Quashqai", 2008, 2000, 8000 };
-    //Auto a5{ "Tesla", 2020, 0, 46000 };
-
-
-    //list<Auto> auto_l;
-    //auto_l.push_back(a1);
-    //auto_l.push_back(a2);
-    //auto_l.push_back(a3);
-    //auto_l.push_back(a4);
-    //auto_l.push_back(a5);
-
-    //SaveToFile(auto_l);
-}
     list<Auto> autos = LoadFromFile();
 
     try {
@@ -368,6 +379,102 @@ int main()
 
                 break;
             }
+            case 6:
+            {
+                int t3 = 1;
+
+                do {
+                    switch (Find_Menu())
+                    {
+                    case 1:
+                    {
+                        string temp_s;
+                        cout << "Enter car name: ";
+                        cin >> temp_s;
+
+                        auto it = find_if(autos.begin(), autos.end(), 
+                            [&](Auto & a) { return a.get_name() == temp_s; });
+
+                        if (it != autos.cend())
+                        {
+                            cout << "There is car with this name\n" << endl;
+                            cout << *it;
+                        }
+                        else
+                            cout << "There is no car with this name\n" << endl;
+                        
+                        break;
+                    }
+                    case 2:
+                    {
+                        int temp_year;
+                        cout << "Enter car production year: ";
+                        cin >> temp_year;
+
+                        auto it = find_if(autos.begin(), autos.end(),
+                            [&](Auto& a) { return a.get_prod_year() == temp_year; });
+
+                        if (it != autos.end())
+                        {
+                            cout << "There is car with this production year\n" << endl;
+                            cout << *it;
+                        }
+                        else
+                            cout << "There is no car with this production year\n" << endl;
+
+                        break;
+                    }
+                    case 3:
+                    {
+                        int temp_eng_vol;
+                        cout << "Enter car engine volume: ";
+                        cin >> temp_eng_vol;
+
+                        auto it = find_if(autos.begin(), autos.end(),
+                            [&](Auto& a) 
+                            { return a.get_engine_volume() == temp_eng_vol; });
+
+                        if (it != autos.end())
+                        {
+                            cout << "There is car with this engine volume\n" << endl;
+                            cout << *it;
+                        }
+                        else
+                            cout << "There is no car with this engine volume\n" << endl;
+
+                        break;
+                    }
+                    case 4:
+                    {
+                        double temp_price;
+                        cout << "Enter car price: ";
+                        cin >> temp_price;
+
+                        auto it = find_if(autos.begin(), autos.end(),
+                            [&](Auto& a) { return a.get_price() == temp_price; });
+
+                        if (it != autos.end())
+                        {
+                            cout << "There is car with this price\n" << endl;
+                            cout << *it;
+                        }
+                        else
+                            cout << "There is no car with this price\n" << endl;
+
+
+                        break;
+                    }
+                    case 0:
+                        t3 = 0;
+                        break;
+                    default:
+                        cout << "Wrong choice!\n";
+                    }
+
+                } while (t3);
+
+                break;
+            }
             case 0:
             {cout << "Good Buy!\n";
             SaveToFile(autos);
@@ -381,8 +488,6 @@ int main()
     catch (char* su) {
         std::cout << "\n\nException!!!\n\n";
     }
-
-    
 
     return 0;
 }
